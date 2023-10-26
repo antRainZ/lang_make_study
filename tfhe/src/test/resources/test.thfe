@@ -1,0 +1,10 @@
+void main() {
+    tlwe<n> a[0:N-1]; // 定义了一个数组a，包含N个tlwe样本，每个
+    for i=0 to log(16)-1 do
+    {
+        for j=0 to 2^(log(16)-i-1) do
+        {
+            a[2^(i+1)*j]=CMUX(a[2^(i+1)*j],a[2^(i+1)*j+2^i],BK);
+        }
+    }
+}

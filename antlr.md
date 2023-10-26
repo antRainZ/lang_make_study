@@ -92,6 +92,8 @@ antlr 提供可选方案,词法符号引用和规则引用(BNF), 划分成子规
 ```java
 /* Optional javadoc style comment*/
 // 文件命名必须和grammar命名相同,如 grammar T,文件名必须命名为T.g4.
+// options,imports,token,action的声明顺序没有要求,但一个文件中options,imports,token最多只能声明一次.
+// grammar是必须声明的,同时必须至少声明一条规则(rule),其余的部分都是可选的.
 grammer Name; 
 options {…}; 
 import …; 
@@ -103,8 +105,7 @@ rule1: <<stuff>> //parser and lexer rules
 ruleN 
 ```
 
-options,imports,token,action的声明顺序没有要求,但一个文件中options,imports,token最多只能声明一次.
-grammar是必须声明的,同时必须至少声明一条规则(rule),其余的部分都是可选的.
+![antlr](./img/antlr.png)
 
 ## 关键字
 
@@ -170,6 +171,25 @@ expr: <assoc=right> expr '^' expr
     ;
 ```
 
+## 常见词法结构
+ANTLR将为字符串常量隐式生成的词法规则放在显式定义的词法规则之前，所以它们总是拥有最高的优先级。
+
+```sh
+# 匹配标识符
+ID: ('a'..'z' | 'A'..'Z')+;
+ID: [a-zA-Z]+;
+STRING: '"' (ESC|.)*? '"';
+# 匹配转义
+ESC: '\\"' | '\\\\'; 
+
+# 匹配注释和空白字符
+assign: ID (WS|COMMENT)? '=' (WS|COMMENT) expr (WS|COMMENT)?; # WS 空白字符
+# skip指令 通知丢弃
+LINE_COMMENT: '//' .*? '\r'? '\n' -> skip;
+COMMENT: '/*' .*? '*/' -> skip;
+WS: [\t\r\n]+ -> skip;
+```
+
 # 解析器规则(Parser Rules)
 解析器由一组解析器规则组成.java应用通过调用生成的规则函数(每个规则会生成一个函数)来启动解析.
 
@@ -202,7 +222,6 @@ ANTLR为每个规则生成一个上下文对象,通过这个对象可以访问�
 ## 规则元素标签(Rule Element Labels)
 可以用 `=` 操作符为规则中的元素添加标签,这样会在规则的上下文对象中添加元素的字段.
 `+=` 操作符可以很方便的记录大量的token或者规则的引用
-
 
 ## 规则元素(Rule ELements)
 规则元素指定了解析器在具体时刻应该执行什么任务.元素可以是规则(rule), 词法单元(token), 字符串文字(string literal)等
@@ -251,7 +270,63 @@ a$values = new HashMap<String,String>();
 }
 ```
 
+## 数据传递
++ 访问器方法来返回值
++ 类成员在事件方法之间共享数据
++ 通过对语法分析树的节点进行标注来存储相关数据
+
+# 高级特性
+
+## 错误报告与恢复
+ANTLR提供的优秀的错误报告功能和复杂的错误恢复机制。ANTLR生成的语法分析器能够自动地在遇到句法错误时产生丰富的错误消息，并且能在大多数情况下成功地完成重新同步。
+
+可以通过实现接口 `ANTLRErrorListener` 来改变错误消息的目标输出和内容
++ 语法分析器会试图在子规则的识别之前和识别过程中进行重新同步(resynchronize)
++ 允许开发者按照策略模式(Strategy pattern)指定自定义的错误处理机制
+
+错误恢复指的是允许语法分析器在发现语法错误后还能继续的机制
++ 通过扫描后续词法符号来恢复
++ 从不匹配的词法符号中恢复
++ 从子规则的错误中恢复
++ 捕获失败的语义判定
++ 错误恢复机制的防护措施
+
+## 属性和动作
+动作就是使用目标语言(即ANTLR生 成的代码的语言)编写的、放置在 `{..}` 中的任意代码块。可以在动作中编写任意代码，只要它们是合法的目标语言语句。
+动作的典型用法是操纵词法符号和规则引用的属性(attribute)
+
+## 使用语义判定修改语法分析过程
+语义判定: `{..}?`，称为，允许在运行时选择性地关闭部分语法
++ 判定本身是布尔表达式，它会减少语法分析器的在语法分析过程中可选项的数量
++ 需要语法分析器处理同一门编程语言稍有差异的多个版本
++ 处理语法的歧义性
+
+## 掌握词法分析的“黑魔法”
++ 将词法符号送入不同通道
++ 上下文相关的词法问题
++ 字符流中的孤岛
+
+# 参考文档
+
+## 探究运行时API
++ `org.antlr.v4.runtime`: 该包包含了最常用的类和接口，例如与输入流、字符和词法符号缓冲区、错误处理、词法符号构建、词法分析和语法分析相关的类体系结构。
++ `org.antlr.v4.runtime.atn`: 该包在ANTLR内部用于自适应LL (*)词法分析和语法分析策略。包名中的atn是增强转移网络(argumented transition network)，它是一种能够表示语法的状态机，其中网络的边代表语法元素。在词法分析和语法分析的过程中，ANTLR沿ATN移动，并基于前瞻符号作出预测。
++ `org.antlr.v4.runtime.dfa`: 使用ATN进行决策的代价很高，因此ANTLR在运行过程中将预测结果缓存在了确定有限状态自动机。该包包含了所有的DFA实现类。
++ `org.antlr.v4.runtime.misc`: 该包包含各种各样的数据结构，以及最常用的TestRig类
++ `org.antlr.v4.runtime.tree`: 默认情况 下，ANTLR自动生成的语法，分析器会建立语法分析树，该包包含实现此功能所需的全部类和接口。这些类和接口中还包括基本的语法分析树监听器、遍历器以及访问器机制。
++ `org.antlr.v4.runtime.tree.gui`: ANTLR自 带一个 基本的语法分析树查看器，可通过inspect方法访问。也可以通过save方法将语法分析树保存为PostScript格式。TestRig的“ -gui”选项亦会启动该查看器。
+
+### 识别器
+ANTLR自动生成的词法分析器和语法分析器是 `Lexer` 和 `Parser` 的子类。Recognizer基类抽象了识别字符序列或词法符号序列中语言结构的概念。识别器(Recognizer) 的数据来源是IntStream。
+Lexer实现了接口TokenSource,后者包含两个核心的词法分析器方法: nextToken 、getLine getCharPositionInLine。
+在最高层次的抽象中，词法分析器和语法分析器的主要工作都是分析整数输入流。词法分析器处理字符(短整数型) ，语法分析器处理词法符号类型(整数型)。
+
+## 移除直接左递归
+
 # 参考
 + ANTLR4权威指南
+  + [参考代码](https://github.com/DropYearning/ANTLR4_Reference)
 + [ANTLR 4简明教程](https://www.bookstack.cn/books/antlr4-short-course)
 + [Antlr4系列（二）：实现一个计算器](https://zhuanlan.zhihu.com/p/546679086)
++ [antlr4 doc](https://github.com/antlr/antlr4/blob/dev/doc/getting-started.md)
++ [Grammars written for ANTLR v4](https://github.com/antlr/grammars-v4)
