@@ -77,9 +77,7 @@ LETTER : [a-zA-Z] ;
 
 
 INT :   [0-9]+ ;
-
+STRING: '"' ( ~('\\'|'"') )* '"'  ;
 WS  :   [ \t\n\r]+ -> skip ;
-
-SL_COMMENT
-    :   '//' .*? '\n' -> skip
-    ;
+NEWLINE: '\r'? '\n' ;
+SL_COMMENT :  '//' .*? '\n' -> skip ;
