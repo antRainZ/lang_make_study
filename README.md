@@ -1,3 +1,9 @@
+# 记录
+
+```sh
+git fetch -f gitee && git reset --hard gitee/master
+```
+
 # 参考
 
 ## github 项目
@@ -6,7 +12,7 @@
 + [Implementation of S Language (SLang) using ANTLR and LLVM](https://github.com/PawelSosnowski/SLang)
     + [类似：A example of LLVM and ANTLR compiling and running a code](https://github.com/klebermagno/compiler)
 + [Unique language made with ANTLR +Java + LLVM](https://github.com/BKopysc/GenuineLang)
-
++ [A procedural programming language built on antlr4 and LLVM](https://github.com/lepoidev/klang)
 
 ## 扩展工作
 + [NOELLE Offers Empowering LLVM Extensions](https://github.com/arcana-lab/noelle)

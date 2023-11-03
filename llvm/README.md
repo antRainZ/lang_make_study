@@ -49,8 +49,11 @@ LLVM和Clang逻辑被精心地组织成如下的程序库：
 # 安装
 
 ```sh
-sudo apt-get install -y llvm clang
-clang -v
+# sudo apt-get install -y llvm clang
+# clang -v
+
+# https://apt.llvm.org/
+sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
 ```
 
 # clang 
