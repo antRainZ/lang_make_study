@@ -54,6 +54,9 @@ LLVM和Clang逻辑被精心地组织成如下的程序库：
 
 # https://apt.llvm.org/
 sudo bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
+
+sudo ln -s /usr/bin/clang++-13 /usr/bin/clang++
+sudo ln -s /usr/bin/clang-13 /usr/bin/clang
 ```
 
 # clang 
@@ -139,16 +142,32 @@ Code Emission 代码输出
 + 代码输出阶段将指令从 MachineInstr 表示变换为 MCInst 实例；
 + 新的表示更适合汇编器和链接器，可以输出汇编代码或者输出二进制块特定目标代码格式
 
+# MLIR
+
++ [Multi-Level Intermediate Representation Overview](https://mlir.llvm.org/)
+
 # 参考
 + [写给入门者的LLVM介绍](https://zhuanlan.zhihu.com/p/472813616)
 + [LLVM后端开发书籍或文章整理](https://zhuanlan.zhihu.com/p/645857966)
 + [llvm 中文文档](https://llvm.liuxfe.com/)
 + [LLVM项目](https://www.cnblogs.com/lqerio/p/16009042.html)
++ [「LLVM」开源软件架构之 LLVM](https://zhuanlan.zhihu.com/p/100241322)
++ [llvm后端流程介绍](https://zhuanlan.zhihu.com/p/636433377)
++ [怎么利用llvm ir和llvm的api来实现诸如活跃变量分析等这样的数据流分析算法?](https://www.zhihu.com/question/575503920)
 
 ## 系列博客
 + [LLVM 编译器](https://csstormq.github.io/)
 + [LLVM 后端实践笔记](https://zhuanlan.zhihu.com/p/351848328)
-+ [用LLVM写一个芯片编译器](https://zhuanlan.zhihu.com/p/474933058)
++ [用LLVM写一个芯片编译器（一）——一文读懂编译器基本概念](https://zhuanlan.zhihu.com/p/474933058)
 + [Deep Learning System core principles introduction.](https://github.com/chenzomi12/DeepLearningSystem)
++ [编译原理与设计-Lab2-编译器认知实验](https://anne416wu.github.io/posts/673/)
 
 ## 书籍
+
+## 项目
++ [This is the template to use for assignments of the Code Analysis and Transformation class at Northwestern University.](https://github.com/scampanoni/LLVM_middleend_template)
+
+
+## 其他
++ [llvm discourse](https://discourse.llvm.org/)
++ [The LLVM Compiler Infrastructure](https://llvm.org/devmtg/)

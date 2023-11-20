@@ -158,3 +158,4 @@ x509.genkey
 sphinx_*/
 
 /tfhe/gen/**
+think.md

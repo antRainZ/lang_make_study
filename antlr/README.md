@@ -326,7 +326,10 @@ Lexer实现了接口TokenSource,后者包含两个核心的词法分析器方法
 # 参考
 + ANTLR4权威指南
   + [参考代码](https://github.com/DropYearning/ANTLR4_Reference)
+  + [ANTLR 介绍](https://bytesfly.github.io/island/#/antlr4/introduction)   
 + [ANTLR 4简明教程](https://www.bookstack.cn/books/antlr4-short-course)
-+ [Antlr4系列（二）：实现一个计算器](https://zhuanlan.zhihu.com/p/546679086)
++ [Antlr4系列（一）：语法分析器学习](https://zhuanlan.zhihu.com/p/483679676)
 + [antlr4 doc](https://github.com/antlr/antlr4/blob/dev/doc/getting-started.md)
 + [Grammars written for ANTLR v4](https://github.com/antlr/grammars-v4)
++ [Antlr4如何自动解析得到AST而不是ParseTree](https://zhuanlan.zhihu.com/p/534178264)
++ [ANTLR 4](https://offbynull.com/data/learn/ANTLR%204.pdf)

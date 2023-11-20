@@ -67,3 +67,6 @@ BasicBlock类封装了LLVM指令序列，可通过begin()/end()访问它们。�
 
 ## Instruction
 Instruction类表示LLVM IR的运算原子，一个单一的指令。利用一些方法可获得高层级的断言，例如isAssociative()，isCommutative()，isIdempotent()，和isTerminator()，但是它的精确的功能可通过getOpcode()获知，它返回llvm::Instruction枚举的一个成员，代表了LLVM IR opcode。可通过op_begin()和op_end()这对方法访问它的操作数，它从User超类继承得到。
+
+# 参考
++ [LLVM Language Reference Manual](https://llvm.org/docs/LangRef.html)
